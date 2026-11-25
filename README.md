@@ -1,3 +1,18 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/amanzadi/GeNor/main/docs/assets/banner.svg" alt="GeNor: post-GWAS analysis from summary statistics, built for AI agents" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://github.com/amanzadi/GeNor/actions/workflows/ci.yml"><img src="https://github.com/amanzadi/GeNor/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0--or--later-blue" alt="License: GPL-3.0-or-later"></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS-lightgrey" alt="Platform: Linux | macOS">
+  <img src="https://img.shields.io/badge/status-alpha-orange" alt="Status: alpha">
+  <a href="docs/mcp.md"><img src="https://img.shields.io/badge/MCP-server-8A2BE2" alt="MCP server"></a>
+  <a href="https://docs.astral.sh/uv/"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" alt="uv"></a>
+  <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
+</p>
+
 # GeNor
 
 **Post-GWAS analysis from summary statistics, built for AI agents.**
