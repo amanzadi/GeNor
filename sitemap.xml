@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/architecture/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/cli/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/data-sources/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/install/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/mcp/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/methods/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/reference-data/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/roadmap/</loc>
+      </url>
+      <url>
+        <loc>https://amanzadi.github.io/GeNor/validation/</loc>
+      </url>
+</urlset>

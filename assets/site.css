@@ -1,0 +1,37 @@
+/* Colours taken from the banner (docs/assets/banner.svg). */
+:root,
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #0d1629;
+  --md-primary-fg-color--light: #12203c;
+  --md-primary-fg-color--dark: #0a1020;
+  --md-primary-bg-color: #f8fafc;
+  --md-primary-bg-color--light: #cbd5e1;
+}
+
+[data-md-color-scheme="default"] {
+  --md-accent-fg-color: #0f766e;
+  --md-typeset-a-color: #0f766e;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: #5eead4;
+  --md-typeset-a-color: #5eead4;
+}
+
+.genor-banner img {
+  width: 100%;
+  border-radius: 14px;
+}
+
+.md-typeset .grid.cards > ul > li {
+  border-radius: 10px;
+}
+
+/* The banner carries the title on the home page; keep the h1 for screen readers only. */
+.md-typeset h1.genor-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
