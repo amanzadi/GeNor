@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS-lightgrey" alt="Platform: Linux | macOS">
   <img src="https://img.shields.io/badge/status-alpha-orange" alt="Status: alpha">
+  <a href="https://amanzadi.github.io/GeNor/"><img src="https://img.shields.io/badge/docs-amanzadi.github.io%2FGeNor-0f766e" alt="Documentation"></a>
   <a href="docs/mcp.md"><img src="https://img.shields.io/badge/MCP-server-8A2BE2" alt="MCP server"></a>
   <a href="https://docs.astral.sh/uv/"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" alt="uv"></a>
   <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
@@ -138,6 +139,8 @@ Skills: `genor` (start here), `sumstats-qc`, `meta-analysis`, `heritability-rg`,
 Install them for other agents with `genor skills install --agent codex|opencode|claude`.
 
 ## Documentation
+
+Browse the docs at **<https://amanzadi.github.io/GeNor/>**, or read them here:
 
 - [Installation for each agent](docs/install.md)
 - [CLI reference](docs/cli.md) and [MCP tools](docs/mcp.md)

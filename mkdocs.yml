@@ -1,0 +1,58 @@
+site_name: GeNor
+site_description: Post-GWAS analysis from summary statistics, built for AI agents.
+site_url: https://amanzadi.github.io/GeNor/
+repo_url: https://github.com/amanzadi/GeNor
+repo_name: amanzadi/GeNor
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2026 Amir H. Amanzadi. GPL-3.0-or-later. Research use only.
+
+theme:
+  name: material
+  font: false  # system fonts: no requests to Google Fonts
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: teal
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: teal
+      toggle: { icon: material/weather-sunny, name: Light mode }
+  features:
+    - navigation.tabs
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.action.edit
+    - search.highlight
+    - toc.follow
+
+extra_css:
+  - assets/site.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed: { alternate_style: true }
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Methods:
+      - Methods and defaults: methods.md
+      - Validation: validation.md
+      - Reference data and tools: reference-data.md
+      - Where to find GWAS: data-sources.md
+  - Reference:
+      - CLI: cli.md
+      - MCP tools: mcp.md
+  - Project:
+      - Architecture: architecture.md
+      - Roadmap: roadmap.md

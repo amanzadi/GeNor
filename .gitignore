@@ -9,6 +9,8 @@ env/
 *.egg-info/
 .eggs/
 build/
+site/
+_site/
 dist/
 wheels/
 

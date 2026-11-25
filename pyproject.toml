@@ -35,6 +35,7 @@ genor = "genor.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/amanzadi/GeNor"
+Documentation = "https://amanzadi.github.io/GeNor/"
 Issues = "https://github.com/amanzadi/GeNor/issues"
 
 [build-system]
