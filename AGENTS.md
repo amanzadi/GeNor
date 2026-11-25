@@ -12,6 +12,7 @@ uv run pytest -m slow         # golden LDSC test (downloads 25 MB)
 uv run pytest -m live         # hits real APIs; nightly only
 uv run ruff check src tests scripts
 uv run python scripts/gen_cli_docs.py   # regenerate docs/cli.md, docs/mcp.md, docs/data-sources.md
+sh scripts/publish_docs.sh    # rebuild the website and push it to the gh-pages branch
 ```
 
 Run all four (pytest, ruff, docs regeneration, `git diff docs/`) before finishing a change.
