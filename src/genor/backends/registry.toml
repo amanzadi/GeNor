@@ -1,0 +1,125 @@
+# External tools GeNor can drive.
+#
+# mode:
+#   download   GeNor downloads a pinned binary on request (redistributable)
+#   user       the user installs it (licence forbids redistribution) and registers it:
+#              genor backend add <name> <path>
+#   system     found on PATH (e.g. Rscript)
+#   container  run through Docker or Apptainer
+#
+# Platform keys: linux-x86_64, linux-x86_64-avx2, darwin-arm64, darwin-x86_64
+
+[plink2]
+description = "PLINK 2.0: clumping and LD computation against a reference panel"
+version = "alpha7 (2026-11-07)"
+mode = "download"
+licence = "GPL-3"
+redistributable = true
+executable = "plink2"
+version_args = ["--version"]
+provides = ["clump", "ld"]
+citation = "plink2"
+[plink2.platforms.linux-x86_64-avx2]
+url = "https://s3.amazonaws.com/plink2-assets/alpha7/plink2_linux_avx2_20261107.zip"
+sha256 = "62e2846268e1b427c22cc0ed1257cf5b4b1dea27f106d628784bc0aa3bb9d57d"
+member = "plink2"
+[plink2.platforms.linux-x86_64]
+url = "https://s3.amazonaws.com/plink2-assets/alpha7/plink2_linux_x86_64_20261107.zip"
+sha256 = "8f931c1f5147b53171530ce9f41e4fb1312e7d3e3729c9db7f81c5dd34bb4297"
+member = "plink2"
+[plink2.platforms.darwin-arm64]
+url = "https://s3.amazonaws.com/plink2-assets/alpha7/plink2_mac_arm64_20261107.zip"
+sha256 = "363f898a40e73967323fe3f4996115ea10561a2510914d7771a2e397fe5c9efa"
+member = "plink2"
+[plink2.platforms.darwin-x86_64]
+url = "https://s3.amazonaws.com/plink2-assets/alpha7/plink2_mac_20261107.zip"
+sha256 = "b5c57a342afc3fa7ef986cf5b43411ceec4ec45d67e0a832103384bfd09df1af"
+member = "plink2"
+
+[gcta]
+description = "GCTA: conditional and joint analysis (COJO)"
+version = "1.95.4"
+mode = "download"
+licence = "GPL-3"
+redistributable = true
+executable = "gcta64"
+version_args = ["--version"]
+provides = ["cojo"]
+citation = "gcta-cojo"
+[gcta.platforms.linux-x86_64]
+url = "https://yanglab.westlake.edu.cn/software/gcta/bin/gcta-1.95.4-linux-x86_64.zip"
+sha256 = "336f7cf98a3b588d52ba6ae670a54341e7005645242f0531e97a3deff02eec33"
+member = "gcta-1.95.4-linux-x86_64/gcta64"
+[gcta.platforms.darwin-arm64]
+url = "https://yanglab.westlake.edu.cn/software/gcta/bin/gcta-1.95.4-macOS-arm64.zip"
+sha256 = "d1279b77ad809f3074838b93917fd117d94944fea53f7848c01a09217594a3c8"
+member = "auto:gcta64"
+
+[smr]
+description = "SMR/HEIDI: summary-data-based Mendelian randomisation with QTL data"
+version = "1.4.3"
+mode = "download"
+licence = "MIT"
+redistributable = true
+executable = "smr"
+version_args = ["--help"]
+provides = ["smr"]
+citation = "genor"
+[smr.platforms.linux-x86_64]
+url = "https://yanglab.westlake.edu.cn/software/smr/download/smr-1.4.3-linux-x86_64.zip"
+sha256 = "ee3f1c565d4efcc4f4563e979ca5e3c4bac526c64ede9fdb1fe959911aa8e1b1"
+member = "smr-1.4.3-linux-x86_64/smr"
+[smr.platforms.darwin-arm64]
+url = "https://yanglab.westlake.edu.cn/software/smr/download/smr-1.4.3-macOS-arm64.zip"
+sha256 = "ae67d4e964ccb27d394552d4b551027035ca3f0a2696fa6bc6f0be18a22ce749"
+member = "smr-1.4.3-macOS-arm64/smr"
+
+[magma]
+description = "MAGMA: gene, gene-set and gene-property (cell type) analysis"
+version = "1.10"
+mode = "user"
+licence = "Proprietary, free for academic use; may not be redistributed"
+redistributable = false
+executable = "magma"
+version_args = ["--version"]
+provides = ["magma.gene", "magma.geneset", "magma.geneprop"]
+citation = "magma"
+install = "Download MAGMA from https://cncr.nl/research/magma/ (accept the licence), unzip, then: genor backend add magma /path/to/magma"
+
+[pleiofdr]
+description = "pleioFDR (Python port, no MATLAB): condFDR / conjFDR"
+version = "2.0.0 (espenhgn/pleiofdr python-port @ 45e03b9)"
+mode = "python"
+module = "pleiofdr"
+licence = "GPL-3.0-only"
+redistributable = true
+executable = "pleiofdr"
+version_args = []
+provides = ["pleio.condfdr", "pleio.conjfdr"]
+citation = "pleiofdr"
+requirement = "pleiofdr @ git+https://github.com/espenhgn/pleiofdr@45e03b9c98c48ce9ef1496c4173a5581b23a853d"
+install = "Needs Python >= 3.13. Run GeNor with the port added: uvx --python 3.13 --with 'pleiofdr @ git+https://github.com/espenhgn/pleiofdr@45e03b9c98c48ce9ef1496c4173a5581b23a853d' genor ...  (or: uv tool install genor --python 3.13 --with '<same spec>')"
+
+[r]
+description = "R (Rscript) for optional R backends: susieR cross-check, MR-PRESSO, LAVA"
+version = ">=4.2"
+mode = "system"
+licence = "GPL-2/3"
+redistributable = false
+executable = "Rscript"
+version_args = ["--version"]
+provides = ["r.susier", "r.mrpresso", "r.lava"]
+citation = "genor"
+install = "Install R (https://github.com/r-lib/rig is the easiest route), then install the R packages you need. R backends are not wired into GeNor yet"
+
+[mixer]
+description = "MiXeR: univariate and bivariate polygenicity (container only, x86-64 Linux)"
+version = "container"
+mode = "container"
+licence = "GPL-3"
+redistributable = true
+executable = "apptainer"
+version_args = ["--version"]
+provides = ["mixer"]
+citation = "genor"
+install = "Needs Apptainer/Singularity or Docker on x86-64 Linux. Not yet wired into GeNor; see docs/roadmap.md."

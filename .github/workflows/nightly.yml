@@ -1,0 +1,17 @@
+name: Nightly
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  live-and-slow:
+    # Remote APIs retire endpoints without notice (GWAS Catalog, eQTL Catalogue did in 2026);
+    # this catches it. Slow tests download reference data for the LDSC golden test.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - run: uv run pytest -m "live or slow" -q

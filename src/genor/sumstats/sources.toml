@@ -1,0 +1,103 @@
+# Where to find GWAS summary statistics. GeNor never downloads from these
+# sources itself: the user downloads the file (accepting any terms) and passes a path.
+# Checked 2026-11-25. Services change; verify the URL before relying on it.
+
+[gwas-catalog]
+name = "NHGRI-EBI GWAS Catalog (summary statistics)"
+url = "https://www.ebi.ac.uk/gwas/downloads/summary-statistics"
+ftp = "https://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/"
+access = "Open. Files by study accession (GCST...). The old summary-statistics REST API and REST API v1 are retired; browse the website or FTP."
+formats = "GWAS-SSF (harmonised *.h.tsv.gz files are GRCh38) and submitter formats"
+build = "Harmonised files: GRCh38. Check each study."
+citation = "Cite the original study (PubMed ID on the study page) and the GWAS Catalog (Cerezo et al. 2025, NAR)."
+good_for = "Any trait; first place to look."
+
+[pgc]
+name = "Psychiatric Genomics Consortium"
+url = "https://pgc.unc.edu/for-researchers/download-results/"
+access = "Free after agreeing to terms of use on the website (per dataset). Some datasets exclude 23andMe or require a separate request."
+formats = "Mostly PLINK/ricopili style text, GRCh37"
+build = "GRCh37"
+citation = "Cite the paper listed for each download and follow PGC's acknowledgement rules."
+good_for = "Psychiatric disorders (MDD, SCZ, BIP, ADHD, ASD, PTSD, ...)."
+
+[opengwas]
+name = "IEU OpenGWAS"
+url = "https://opengwas.io"
+access = "Needs a free account and a personal JWT token for API use; files can be downloaded as GWAS-VCF per study ID. Token handling stays with the user, never in GeNor."
+formats = "GWAS-VCF (GeNor reads single-trait GWAS-VCF directly)"
+build = "GRCh37"
+citation = "Cite the original study and Elsworth et al. 2020 (bioRxiv 10.1101/2020.08.10.244293)."
+good_for = "Large harmonised collection, popular for MR."
+
+[finngen]
+name = "FinnGen public results"
+url = "https://www.finngen.fi/en/access_results"
+access = "Open after filling a short form; per-release bucket of per-endpoint files."
+formats = "Tab-separated, GRCh38, columns #chrom pos ref alt rsids nearest_genes pval mlogp beta sebeta af_alt ..."
+build = "GRCh38"
+citation = "Kurki MI et al. FinnGen provides genetic insights from a well-phenotyped isolated population. Nature 2023."
+good_for = "Disease endpoints from Finnish registries; Finnish (EUR, isolate) ancestry."
+
+[pan-ukb]
+name = "Pan-UK Biobank"
+url = "https://pan.ukbb.broadinstitute.org/downloads"
+access = "Open (AWS open data)."
+formats = "Tab-separated per phenotype with per-ancestry columns (EUR, AFR, AMR, CSA, EAS, MID). Pick one ancestry's columns with --col."
+build = "GRCh37"
+citation = "Pan-UKB team, https://pan.ukbb.broadinstitute.org (2020); cite UK Biobank."
+good_for = "Thousands of UK Biobank phenotypes across six ancestry groups."
+
+[neale-ukb]
+name = "Neale lab UK Biobank GWAS"
+url = "http://www.nealelab.is/uk-biobank"
+access = "Open."
+formats = "Tab-separated, GRCh37, variant as chr:pos:ref:alt"
+build = "GRCh37"
+citation = "Neale lab UK Biobank GWAS round 2 (2018)."
+good_for = "Many UK Biobank traits, EUR."
+
+[giant]
+name = "GIANT consortium (anthropometric traits)"
+url = "https://portals.broadinstitute.org/collaboration/giant/index.php/GIANT_consortium_data_files"
+access = "Open."
+formats = "Text, GRCh37"
+build = "GRCh37"
+citation = "Cite the specific GIANT paper (e.g. Yengo et al. 2018 for BMI/height)."
+good_for = "BMI, height, waist-hip ratio."
+
+[eqtlgen]
+name = "eQTLGen (blood cis/trans-eQTL)"
+url = "https://www.eqtlgen.org/phase1.html"
+access = "Open."
+formats = "Text; SMR .besd versions available"
+build = "GRCh37"
+citation = "Vosa U et al. Nat Genet 2021."
+good_for = "Exposure data for SMR/MR on gene expression."
+
+[gtex]
+name = "GTEx portal (eQTL/sQTL)"
+url = "https://gtexportal.org/home/downloads/adult-gtex/qtl"
+access = "Significant pairs open; full summary statistics via the GTEx/AnVIL buckets."
+formats = "Parquet / text, GRCh38"
+build = "GRCh38"
+citation = "GTEx Consortium. Science 2020;369:1318-1330."
+good_for = "Tissue QTLs for colocalisation."
+
+[eqtl-catalogue]
+name = "eQTL Catalogue"
+url = "https://www.ebi.ac.uk/eqtl/Data_access/"
+access = "Open via FTP (tabix-indexed per dataset). The old REST API is retired."
+formats = "Tab-separated, tabix-indexed, GRCh38"
+build = "GRCh38"
+citation = "Kerimov N et al. Nat Genet 2021."
+good_for = "Uniformly processed QTLs from many studies."
+
+[pgs-catalog]
+name = "PGS Catalog"
+url = "https://www.pgscatalog.org"
+access = "Open."
+formats = "Scoring files"
+build = "GRCh37/GRCh38 harmonised"
+citation = "Lambert SA et al. Nat Genet 2021."
+good_for = "Published polygenic score weights (not summary statistics)."

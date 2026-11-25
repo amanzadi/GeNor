@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "genor": {
+      "command": "uvx",
+      "args": ["--quiet", "--from", "${CLAUDE_PLUGIN_ROOT}", "genor", "mcp"]
+    }
+  }
+}

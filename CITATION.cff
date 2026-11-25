@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use GeNor, please cite it and the methods and data listed in your run manifests."
+title: "GeNor: post-GWAS analysis toolkit for AI agents"
+type: software
+authors:
+  - family-names: Amanzadi
+    given-names: Amir H.
+license: GPL-3.0-or-later
+repository-code: "https://github.com/amanzadi/Genor"
+version: 0.1.0
+date-released: 2026-11-25

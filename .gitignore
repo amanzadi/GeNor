@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.DS_Store
+genor_runs/
+genor_example/
+genor_report.md
+genor_report.html
+*.mcpb
+pleiofdr-python-port/

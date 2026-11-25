@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14]
+        python: ["3.11", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --python ${{ matrix.python }}
+      - run: uv run ruff check src tests scripts
+      - run: uv run pytest -q
+      - name: Generated docs are up to date
+        if: matrix.python == '3.13' && matrix.os == 'ubuntu-latest'
+        run: |
+          uv run python scripts/gen_cli_docs.py
+          git diff --exit-code docs/
+
+  clean-machine:
+    # No R, conda or Docker: everything in core must work from uvx alone.
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-14]
+    runs-on: ${{ matrix.os }}
+    env:
+      GENOR_HOME: ${{ github.workspace }}/.genor
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: doctor
+        run: uvx --from . genor doctor --json
+      - name: example pipeline
+        run: |
+          mkdir -p /tmp/e && cd /tmp/e
+          G="uvx --from $GITHUB_WORKSPACE genor"
+          $G example --out ex --json
+          $G sumstats load ex/bmi_sim.tsv.gz --trait BMI_sim --ancestry EUR --out runs/bmi --json
+          $G sumstats load ex/mdd_sim.tsv.gz --trait MDD_sim --ancestry EUR --population-prevalence 0.15 --out runs/mdd --json
+          $G refdata fetch ldsc-ldscores-eur ldsc-weights-eur --json
+          $G ldsc rg runs/bmi runs/mdd --out runs/rg --json
+          $G backend install plink2 --json
+          $G refdata fetch g1000-eur --yes --json
+          $G mr run --exposure runs/bmi --outcome runs/mdd --overlap none --out runs/mr --json
+          $G report build runs/bmi runs/mdd runs/rg runs/mr --out report.md --json
+          test -s report.html
+      - name: Claude Code plugin manifest
+        run: |
+          python -c "import json; [json.load(open(p)) for p in ('.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', '.mcp.json')]"

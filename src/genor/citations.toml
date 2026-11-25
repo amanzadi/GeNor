@@ -1,0 +1,85 @@
+# Citation keys recorded in run manifests. The report builder prints these.
+
+[genor]
+text = "GeNor: post-GWAS analysis toolkit for AI agents. https://github.com/amanzadi/Genor"
+
+[gwas-ssf]
+text = "Hayhurst J, et al. A community standard for summary statistics (GWAS-SSF). bioRxiv 2022. doi:10.1101/2022.07.15.500230"
+
+[ldsc]
+text = "Bulik-Sullivan BK, et al. LD Score regression distinguishes confounding from polygenicity in genome-wide association studies. Nat Genet 2015;47:291-295. doi:10.1038/ng.3211"
+
+[ldsc-rg]
+text = "Bulik-Sullivan B, et al. An atlas of genetic correlations across human diseases and traits. Nat Genet 2015;47:1236-1241. doi:10.1038/ng.3406"
+
+[ldsc-ref-zenodo]
+text = "S-LDSC reference files (1000 Genomes Phase 3). Zenodo record 10515792, CC BY 4.0. doi:10.5281/zenodo.10515792"
+
+[1000g]
+text = "The 1000 Genomes Project Consortium. A global reference for human genetic variation. Nature 2015;526:68-74. doi:10.1038/nature15393"
+
+[plink2]
+text = "Chang CC, et al. Second-generation PLINK: rising to the challenge of larger and richer datasets. GigaScience 2015;4:7. doi:10.1186/s13742-015-0047-8"
+
+[gcta-cojo]
+text = "Yang J, et al. Conditional and joint multiple-SNP analysis of GWAS summary statistics identifies additional variants influencing complex traits. Nat Genet 2012;44:369-375. doi:10.1038/ng.2213"
+
+[metal]
+text = "Willer CJ, Li Y, Abecasis GR. METAL: fast and efficient meta-analysis of genomewide association scans. Bioinformatics 2010;26:2190-2191. doi:10.1093/bioinformatics/btq340 (GeNor reimplements the IVW and sample-size schemes natively)"
+
+[dersimonian-laird]
+text = "DerSimonian R, Laird N. Meta-analysis in clinical trials. Control Clin Trials 1986;7:177-188."
+
+[higgins-i2]
+text = "Higgins JPT, Thompson SG. Quantifying heterogeneity in a meta-analysis. Stat Med 2002;21:1539-1558."
+
+[mr-ivw]
+text = "Burgess S, Butterworth A, Thompson SG. Mendelian randomization analysis with multiple genetic variants using summarized data. Genet Epidemiol 2013;37:658-665."
+
+[mr-egger]
+text = "Bowden J, Davey Smith G, Burgess S. Mendelian randomization with invalid instruments: effect estimation and bias detection through Egger regression. Int J Epidemiol 2015;44:512-525."
+
+[mr-median]
+text = "Bowden J, et al. Consistent estimation in Mendelian randomization with some invalid instruments using a weighted median estimator. Genet Epidemiol 2016;40:304-314."
+
+[mr-mode]
+text = "Hartwig FP, Davey Smith G, Bowden J. Robust inference in summary data Mendelian randomization via the zero modal pleiotropy assumption. Int J Epidemiol 2017;46:1985-1998."
+
+[mr-steiger]
+text = "Hemani G, Tilling K, Davey Smith G. Orienting the causal relationship between imprecisely measured traits using GWAS summary data. PLoS Genet 2017;13:e1007081."
+
+[twosamplemr]
+text = "Hemani G, et al. The MR-Base platform supports systematic causal inference across the human phenome. eLife 2018;7:e34408. (GeNor's MR estimators are validated against TwoSampleMR output)"
+
+[strobe-mr]
+text = "Skrivankova VW, et al. Strengthening the Reporting of Observational Studies in Epidemiology Using Mendelian Randomization: The STROBE-MR Statement. JAMA 2021;326:1614-1621. doi:10.1001/jama.2021.18236"
+
+[pleiofdr]
+text = "Andreassen OA, et al. Improved detection of common variants associated with schizophrenia and bipolar disorder using pleiotropy-informed conditional false discovery rate. PLoS Genet 2013;9:e1003455."
+
+[conjfdr]
+text = "Smeland OB, et al. Discovery of shared genomic loci using the conditional false discovery rate approach. Hum Genet 2020;139:85-94."
+
+[wakefield-abf]
+text = "Wakefield J. Bayes factors for genome-wide association studies: comparison with P-values. Genet Epidemiol 2009;33:79-86."
+
+[coloc]
+text = "Giambartolomei C, et al. Bayesian test for colocalisation between pairs of genetic association studies using summary statistics. PLoS Genet 2014;10:e1004383."
+
+[magma]
+text = "de Leeuw CA, et al. MAGMA: generalized gene-set analysis of GWAS data. PLoS Comput Biol 2015;11:e1004219."
+
+[opentargets]
+text = "Buniello A, et al. Open Targets Platform: facilitating therapeutic hypotheses building in drug discovery. Nucleic Acids Res 2025;53:D1467-D1475."
+
+[ensembl-vep]
+text = "McLaren W, et al. The Ensembl Variant Effect Predictor. Genome Biol 2016;17:122."
+
+[string]
+text = "Szklarczyk D, et al. The STRING database in 2023. Nucleic Acids Res 2023;51:D638-D646."
+
+[gprofiler]
+text = "Kolberg L, et al. g:Profiler - interoperable web service for functional enrichment analysis and gene identifier mapping (2023 update). Nucleic Acids Res 2023;51:W207-W212."
+
+[liftover]
+text = "Hinrichs AS, et al. The UCSC Genome Browser Database: update 2006. Nucleic Acids Res 2006;34:D590-D598. (chain files)"

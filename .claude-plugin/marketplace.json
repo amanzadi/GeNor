@@ -1,0 +1,12 @@
+{
+  "name": "genor",
+  "owner": { "name": "Amir H. Amanzadi" },
+  "description": "GeNor: post-GWAS toolkit for AI agents",
+  "plugins": [
+    {
+      "name": "genor",
+      "source": "./",
+      "description": "Post-GWAS analysis from GWAS summary statistics: skills, MCP server and slash commands."
+    }
+  ]
+}

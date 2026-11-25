@@ -1,0 +1,8 @@
+#!/bin/sh
+# Runs the GeNor CLI from this plugin checkout with uv. Claude Code puts plugin bin/ on PATH.
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
+if ! command -v uvx >/dev/null 2>&1; then
+  echo '{"status":"error","error":{"code":"uv_missing","message":"uv is not installed","hint":"Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"}}'
+  exit 2
+fi
+exec uvx --quiet --from "$ROOT" genor "$@"

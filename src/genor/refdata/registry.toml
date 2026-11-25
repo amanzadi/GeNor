@@ -1,0 +1,126 @@
+# Reference datasets GeNor can download on request.
+#
+# Every entry is checksum-pinned (md5 from Zenodo, or sha256 computed by the
+# maintainers). Entries with `hash = ""` are unpinned: GeNor refuses them unless
+# the user passes --allow-unpinned, and records the hash it saw in the manifest.
+#
+# Fields: url, hash ("md5:..." or "sha256:..."), size (bytes), build, ancestry,
+# licence, unpack ("tgz" | "zip" | "gzip" | ""), provides (what methods use it),
+# citation (key in citations.toml).
+
+[ldsc-weights-eur]
+description = "LDSC regression weights / LD scores, HapMap3 SNPs without MHC, 1000G Phase 3 EUR (the eur_w_ld_chr equivalent)"
+url = "https://zenodo.org/api/records/10515792/files/1000G_Phase3_weights_hm3_no_MHC.tgz/content"
+hash = "md5:a98ac0f089ee285177544a3e6e721ca3"
+size = 12757654
+build = "GRCh37"
+ancestry = "EUR"
+licence = "CC BY 4.0"
+unpack = "tgz"
+prefix = "1000G_Phase3_weights_hm3_no_MHC/weights.hm3_noMHC."
+provides = ["ldsc.h2", "ldsc.rg"]
+citation = "ldsc-ref-zenodo"
+
+[ldsc-ldscores-eur]
+description = "LD scores for HapMap3 SNPs with M_5_50 counts, 1000G Phase 3 EUR (LDSC --ref-ld; pairs with ldsc-weights-eur)"
+url = "https://zenodo.org/api/records/10515792/files/1000G_Phase3_ldscores.tgz/content"
+hash = "md5:e4352ccf778f296835d73985350a863b"
+size = 13362450
+build = "GRCh37"
+ancestry = "EUR"
+licence = "CC BY 4.0"
+unpack = "tgz"
+prefix = "LDscore/LDscore."
+provides = ["ldsc.h2", "ldsc.rg"]
+citation = "ldsc-ref-zenodo"
+
+[hm3-snplist]
+description = "HapMap3 SNP list without the MHC region (LDSC --merge-alleles SNP set, rsIDs only)"
+url = "https://zenodo.org/api/records/10515792/files/hm3_no_MHC.list.txt/content"
+hash = "md5:65a34c68833eb4a764d0707b5505b508"
+size = 12395058
+build = "GRCh37"
+ancestry = "any"
+licence = "CC BY 4.0"
+unpack = ""
+filename = "hm3_no_MHC.list.txt"
+provides = ["ldsc.h2", "ldsc.rg"]
+citation = "ldsc-ref-zenodo"
+
+[g1000-eur]
+description = "1000 Genomes Phase 3 EUR genotypes in PLINK format (LD reference for clumping and LD lookups; 489 samples)"
+url = "https://zenodo.org/api/records/10515792/files/1000G_Phase3_plinkfiles.tgz/content"
+hash = "md5:a7773ab485827b533cb300c76356d76b"
+size = 288277344
+build = "GRCh37"
+ancestry = "EUR"
+licence = "CC BY 4.0 (Zenodo packaging); 1000 Genomes data are open access"
+unpack = "tgz"
+prefix = "auto"
+provides = ["clump", "ld", "cojo"]
+citation = "1000g"
+
+[g1000-eas]
+description = "1000 Genomes Phase 3 EAS genotypes in PLINK format (LD reference for clumping and LD lookups)"
+url = "https://zenodo.org/api/records/10515792/files/1000G_Phase3_EAS_plinkfiles.tgz/content"
+hash = "md5:abf52fba6416622ea0757ca9aca51a87"
+size = 322780480
+build = "GRCh37"
+ancestry = "EAS"
+licence = "CC BY 4.0 (Zenodo packaging); 1000 Genomes data are open access"
+unpack = "tgz"
+prefix = "auto"
+provides = ["clump", "ld", "cojo"]
+citation = "1000g"
+
+[chain-hg19-to-hg38]
+description = "UCSC liftOver chain GRCh37 -> GRCh38"
+url = "https://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz"
+hash = "sha256:5c0598e500ceb5a78c73086929e8ef993aec309bcafb595139b53d440b125a1d"
+size = 227698
+build = "GRCh37->GRCh38"
+ancestry = "any"
+licence = "UCSC: freely usable"
+unpack = ""
+filename = "hg19ToHg38.over.chain.gz"
+provides = ["sumstats.liftover"]
+citation = "liftover"
+
+[chain-hg38-to-hg19]
+description = "UCSC liftOver chain GRCh38 -> GRCh37"
+url = "https://hgdownload.soe.ucsc.edu/goldenPath/hg38/liftOver/hg38ToHg19.over.chain.gz"
+hash = "sha256:14a712e8e147d9fc8e9d87d51977b46f6f8ddb93efbe5d0843d86b6205f587b1"
+size = 1246411
+build = "GRCh38->GRCh37"
+ancestry = "any"
+licence = "UCSC: freely usable"
+unpack = ""
+filename = "hg38ToHg19.over.chain.gz"
+provides = ["sumstats.liftover"]
+citation = "liftover"
+
+[pleiofdr-template]
+description = "pleioFDR SNP template (9,545,380 1000G EUR variants). Required to align traits for condFDR/conjFDR"
+url = "https://precimed.s3-eu-west-1.amazonaws.com/pleiofdr/9545380.ref"
+hash = ""
+size = 274423819
+build = "GRCh37"
+ancestry = "EUR"
+licence = "See https://github.com/precimed/pleiofdr"
+unpack = ""
+filename = "9545380.ref"
+provides = ["pleio.condfdr", "pleio.conjfdr"]
+citation = "pleiofdr"
+
+[pleiofdr-ref-eur]
+description = "pleioFDR reference: LD matrix (r2 > 0.1) and annotations for the 9,545,380-SNP template"
+url = "https://precimed.s3-eu-west-1.amazonaws.com/pleiofdr/ref9545380_1kgPhase3eur_LDr2p1.mat"
+hash = ""
+size = 2383912974
+build = "GRCh37"
+ancestry = "EUR"
+licence = "See https://github.com/precimed/pleiofdr"
+unpack = ""
+filename = "ref9545380_1kgPhase3eur_LDr2p1.mat"
+provides = ["pleio.condfdr", "pleio.conjfdr"]
+citation = "pleiofdr"
