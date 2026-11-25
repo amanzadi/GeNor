@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """MAGMA driver (gene, gene-set, gene-property analysis).
 
 MAGMA's licence forbids redistribution, so the user downloads it once and registers

@@ -1,15 +1,75 @@
-.venv/
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+.python-version
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# Tooling caches and reports
 .pytest_cache/
 .ruff_cache/
-dist/
-build/
-*.egg-info/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.ipynb_checkpoints/
+
+# Editors and OS
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Secrets and local settings
+.env
+.env.*
+*.pem
+*.key
+
+# Local AI-assistant state (the plugin itself lives in .claude-plugin/, which is tracked)
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.agents/
+.codex/
+.opencode/
+
+# GeNor outputs and local data
 genor_runs/
 genor_example/
+genor-workspace/
 genor_report.md
 genor_report.html
+report.md
+report.html
 *.mcpb
+*.log
+*.parquet
+*.sumstats
+*.sumstats.gz
+!tests/golden/*.sumstats.gz
+*.mat
+*.bed
+*.bim
+*.fam
+*.pgen
+*.pvar
+*.psam
+*.bgen
+*.vcf
+*.vcf.gz
+
+# Local copies of other projects
 pleiofdr-python-port/

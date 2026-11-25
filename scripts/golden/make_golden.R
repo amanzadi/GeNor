@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 # Regenerate golden reference values (maintainers only).
 # Rscript scripts/golden/make_golden.R   (needs TwoSampleMR, coloc, meta, jsonlite)
 suppressPackageStartupMessages({library(TwoSampleMR); library(coloc); library(meta); library(jsonlite)})

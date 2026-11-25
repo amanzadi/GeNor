@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
 # Runs the GeNor CLI from this plugin checkout with uv. Claude Code puts plugin bin/ on PATH.
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 if ! command -v uvx >/dev/null 2>&1; then

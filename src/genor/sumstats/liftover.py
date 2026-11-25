@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Native UCSC chain-file liftover for point positions (SNPs).
 
 Positions are 1-based in and out. Variants that fall outside aligned blocks, map

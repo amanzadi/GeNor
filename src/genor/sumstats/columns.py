@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Column-name detection for summary statistics files.
 
 Internal names follow GWAS-SSF. Header names are normalised (lower case, only

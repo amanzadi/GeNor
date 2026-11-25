@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Combine one or more run directories into a Markdown (and HTML) report.
 
 The report states what was run, key numbers, every warning, the decisions that were

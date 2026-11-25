@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """LD score regression: SNP heritability and genetic correlation.
 
 Data handling mirrors ``munge_sumstats.py`` + ``ldsc.py --h2/--rg`` from the

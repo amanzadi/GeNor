@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Regenerate GeNor's bundled data (maintainers only).
 
 Inputs are the public reference files listed in src/genor/refdata/registry.toml:

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """GeNor's LDSC wrapper vs the original ldsc.py (CBIIT/ldsc py3 fork) on identical munged input.
 
 Needs the LDSC reference files (~25 MB download), so it is marked slow:

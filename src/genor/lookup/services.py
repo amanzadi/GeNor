@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Remote lookups: Open Targets Platform, Ensembl (VEP, genes in region), STRING, g:Profiler.
 
 All are open APIs without authentication. Each function returns plain JSON-able data

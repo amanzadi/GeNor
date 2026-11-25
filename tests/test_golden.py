@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Native ports vs the reference R implementations.
 
 Reference values in tests/golden/expected_r.json come from scripts/golden/make_golden.R

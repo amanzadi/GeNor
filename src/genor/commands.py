@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Command implementations shared by the CLI and the MCP server.
 
 Each analysis function opens a :class:`~genor.runs.Run`, does the work, records

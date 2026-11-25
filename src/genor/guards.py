@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Guard rails enforced in code.
 
 - Summary statistics only: individual-level genotype inputs are refused.

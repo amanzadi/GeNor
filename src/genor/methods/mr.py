@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Two-sample Mendelian randomisation from summary statistics.
 
 Estimators follow TwoSampleMR 0.7.x exactly where the method is deterministic

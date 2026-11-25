@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """GeNor MCP server (stdio).
 
 Tools mirror the CLI. Analyses run as background jobs: a tool waits up to

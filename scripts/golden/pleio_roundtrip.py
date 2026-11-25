@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Round-trip check: GeNor's template alignment + pleioFDR port == pleioFDR on the original MAT files.
 
 Needs the pleioFDR demo data (pleioFDR_demo_data.tar.gz, 21 MB) and the 9545380.ref template

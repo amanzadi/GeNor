@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Skill files: locate, serve as guidance, and install for each agent.
 
 Skills live in the repository's ``skills/`` directory (the Claude Code plugin reads them

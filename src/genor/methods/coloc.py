@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Wakefield ABF fine-mapping (single causal variant) and coloc ABF colocalisation.
 
 Ports of ``coloc::finemap.abf`` and ``coloc::coloc.abf`` (coloc 5.x) for summary

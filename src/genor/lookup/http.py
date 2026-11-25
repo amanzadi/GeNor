@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Shared HTTP client: polite rate limits, retries, and a test hook.
 
 Tests replace :data:`TRANSPORT` with an ``httpx.MockTransport`` that serves recorded

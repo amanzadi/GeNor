@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Allele harmonisation between two sets of summary statistics.
 
 Follows TwoSampleMR's ``action = 2`` semantics: align the second dataset to the

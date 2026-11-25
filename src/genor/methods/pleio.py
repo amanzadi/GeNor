@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """condFDR / conjFDR through the pleioFDR Python port (no MATLAB).
 
 GeNor's part: align each trait to the pleioFDR 9,545,380-SNP template (``logpvec`` /

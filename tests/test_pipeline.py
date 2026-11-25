@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """End-to-end on the bundled example, without downloads (distance clumping, no LDSC)."""
 
 import json

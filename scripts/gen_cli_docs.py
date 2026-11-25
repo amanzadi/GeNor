@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """Write docs/cli.md, docs/mcp.md and docs/data-sources.md from the code (run: uv run python scripts/gen_cli_docs.py)."""
 
 from pathlib import Path

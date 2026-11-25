@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Amir H. Amanzadi
+
 """STROBE-MR checklist (Skrivankova et al., JAMA 2021) filled from an MR run.
 
 Each of the 20 items gets a status:
