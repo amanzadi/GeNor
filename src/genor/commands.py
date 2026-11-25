@@ -23,7 +23,7 @@ import pandas as pd
 
 from genor import RESEARCH_USE_NOTICE, __version__, backends, refdata
 from genor.errors import GenorError, NeedsUserDecision
-from genor.runs import Run
+from genor.runs import Run, _jsonable
 from genor.sumstats.load import TraitMeta, load, open_trait, save_trait
 
 # ============================================================== environment
@@ -205,6 +205,7 @@ def meta_run(traits: list[Path], out: Path, scheme: str = "ivw", trait_name: str
         nm = TraitMeta(trait=trait_name, build=metas[0].build,
                        ancestry=metas[0].ancestry if len({m.ancestry for m in metas}) == 1 else "multi",
                        n=float(res["n"].max()) if res["n"].notna().any() else None,
+                       trait_type="binary" if all(m.trait_type == "binary" for m in metas) else "quantitative",
                        source="genor meta: " + ", ".join(m.trait for m in metas))
         keep = [c for c in ("variant_id", "chromosome", "base_pair_location", "effect_allele", "other_allele",
                             "beta", "standard_error", "p_value", "z", "n", "effect_allele_frequency") if c in res]
@@ -255,7 +256,7 @@ def ldsc_h2(trait: Path, out: Path, *, ref: str = "ldsc-ldscores-eur", w: str = 
             else:
                 run.ask(f"What is the population prevalence of {meta.trait}?", [],
                         "Needed to convert h2 to the liability scale (--pop-prev).")
-        (run.path("h2.json")).write_text(json.dumps(res, indent=2))
+        (run.path("h2.json")).write_text(json.dumps(_jsonable(res), indent=2))
         run.output("h2", run.path("h2.json"))
     return run.result()
 
@@ -273,7 +274,7 @@ def ldsc_rg(trait1: Path, trait2: Path, out: Path, *, ref: str = "ldsc-ldscores-
         ld = _ld_inputs(run, ref, w)
         run.cite("ldsc-rg")
         res = ldsc.rg(d1, m1, d2, m2, ld, run.warnings, pop_prev=(pop_prev1, pop_prev2))
-        (run.path("rg.json")).write_text(json.dumps(res, indent=2))
+        (run.path("rg.json")).write_text(json.dumps(_jsonable(res), indent=2))
         run.output("rg", run.path("rg.json"))
         run.summary = res
     return run.result()
@@ -334,6 +335,13 @@ def mr_run(exposure: Path, outcome: Path, out: Path, *, p_threshold: float = 5e-
     with Run("mr", out, params) as run:
         ex, mx = open_trait(exposure)
         oc, mo = open_trait(outcome)
+        for side, d, m in (("exposure", ex, mx), ("outcome", oc, mo)):
+            if not {"beta", "standard_error"} <= set(d.columns):
+                raise GenorError(f"The {side} trait {m.trait} has no beta/standard_error columns.",
+                                 code="mr_needs_beta_se",
+                                 hint="MR needs per-variant effects with standard errors. Reload the GWAS "
+                                      "from a file that has them (a Z/P-only or sample-size meta-analysed "
+                                      "trait cannot be used).")
         run.add_input(Path(exposure) / "sumstats.parquet", "exposure", trait=mx.trait)
         run.add_input(Path(outcome) / "sumstats.parquet", "outcome", trait=mo.trait)
         run.cite("mr-ivw", "mr-egger", "mr-median", "mr-mode", "mr-steiger", "twosamplemr", "strobe-mr")
@@ -358,6 +366,7 @@ def mr_run(exposure: Path, outcome: Path, out: Path, *, p_threshold: float = 5e-
             summary["clump"] = cinfo
             if clump_mode == "plink":
                 _record_plink(run)
+                run.add_refdata(cinfo["panel"], **refdata.info_for_manifest(cinfo["panel"]))
         if exclude_mhc:
             mm = mhc_mask(inst, mx.build)
             inst = inst[~mm]
@@ -456,7 +465,7 @@ def mr_run(exposure: Path, outcome: Path, out: Path, *, p_threshold: float = 5e-
         # STROBE-MR after the summary exists
         items = strobe_mr.build(run.manifest(), recs)
         run.path("strobe_mr.md").write_text(strobe_mr.to_markdown(items))
-        run.path("strobe_mr.json").write_text(json.dumps(items, indent=2))
+        run.path("strobe_mr.json").write_text(json.dumps(_jsonable(items), indent=2))
         run.output("strobe_mr", run.path("strobe_mr.md"))
         summary["strobe_mr"] = {s: sum(1 for i in items if i["status"] == s) for s in ("filled", "partial", "human")}
         run.next_steps = [f"genor report build {run.dir} --out {run.dir}/report.md"]
@@ -501,6 +510,9 @@ def _region_from(df: pd.DataFrame, region: str | None, lead: str | None, window_
     if region:
         return region
     if lead:
+        if "variant_id" not in df:
+            raise GenorError("This trait has no variant_id column to find the lead variant in.",
+                             code="bad_param", hint="Give --region chr:start-end instead of --lead.")
         r = df[df["variant_id"].astype(str) == lead]
         if r.empty:
             raise GenorError(f"Lead variant {lead} not in the trait", code="not_found")
@@ -548,13 +560,17 @@ def coloc_run(trait1: Path, trait2: Path, out: Path, *, region: str | None = Non
         run.add_input(Path(trait1) / "sumstats.parquet", "trait1", trait=m1.trait)
         run.add_input(Path(trait2) / "sumstats.parquet", "trait2", trait=m2.trait)
         reg = _region_from(d1, region, lead, window_kb)
-        from genor.sumstats.harmonise import harmonise
+        from genor.sumstats.harmonise import _with_key, join_key
+        # ABF uses beta^2/se^2 only, so no allele alignment: palindromic SNPs stay in.
         s1, s2 = subset_region(d1, reg), subset_region(d2, reg)
-        h, _ = harmonise(s1, s2, suffixes=("", "_b"), w=run.warnings)
-        s2a = pd.DataFrame({c: h[f"{c}_b"] for c in ("beta", "standard_error", "p_value", "n",
-                                                    "effect_allele_frequency") if f"{c}_b" in h})
-        s2a["variant_id"] = h["variant_id"].to_numpy()
-        res, summary = coloc_abf(s1, m1, s2a, m2, run.warnings, p1, p2, p12)
+        key = join_key(s1, s2)
+        k1, k2 = _with_key(s1, key), _with_key(s2, key)
+        if "variant_id" not in k1:
+            k1["variant_id"] = k1["_key"]
+        k1 = k1.drop_duplicates("variant_id")
+        cols = [c for c in ("beta", "standard_error", "p_value", "n", "effect_allele_frequency") if c in k2]
+        s2a = k2[["_key", *cols]].merge(k1[["_key", "variant_id"]], on="_key").drop(columns="_key")
+        res, summary = coloc_abf(k1.drop(columns="_key"), m1, s2a, m2, run.warnings, p1, p2, p12)
         res.to_csv(run.path("coloc_snp_pp.tsv"), sep="\t", index=False)
         run.output("snp_pp", run.path("coloc_snp_pp.tsv"))
         run.cite("coloc")
@@ -608,10 +624,11 @@ def report_build(run_dirs: list[Path], out: Path, title: str = "GeNor analysis r
     return {"status": "ok", **build(run_dirs, out, title)}
 
 
-def list_runs(root: Path = Path("genor_runs")) -> dict[str, Any]:
+def list_runs(root: Path = Path(".")) -> dict[str, Any]:
     runs = []
-    for m in sorted(Path(".").rglob("manifest.json")):
-        if any(part.startswith(".") for part in m.parts):
+    root = Path(root)
+    for m in sorted(root.rglob("manifest.json")):
+        if any(part.startswith(".") for part in m.relative_to(root).parts):
             continue
         try:
             d = json.loads(m.read_text())

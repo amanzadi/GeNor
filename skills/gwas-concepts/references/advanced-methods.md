@@ -16,7 +16,7 @@
 | TWAS (FUSION, S-PrediXcan) | Gene expression imputed association | No | - |
 | condFDR / conjFDR (pleioFDR) | Boost discovery using a related trait; shared loci | Yes (Python port) | `genor pleio run`, `pleiotropy-condfdr` |
 | MiXeR | Polygenicity, discoverability, polygenic overlap | No (container only, not wired) | - |
-| LAVA | Local genetic correlation | No (R backend listed, not wired) | - |
+| LAVA | Local genetic correlation | No (planned) | - |
 | S-LDSC / LDSC-SEG | Partitioned heritability by annotation / tissue | No | - |
 | MAGMA | Gene, gene-set, gene-property analysis | Yes, with user-installed MAGMA | `genor magma gene|sets`, `gene-pathway-celltype` |
 | PRS | Individual genetic scores | No (GeNor does not score genotypes) | - |

@@ -229,14 +229,10 @@ def list_runs() -> dict[str, Any]:
     """Run directories (with manifest.json) in the workspace."""
     from genor.commands import list_runs as lr
 
-    cwd = os.getcwd()
-    try:
-        os.chdir(workspace())
-        out = lr()
-        out["workspace"] = str(workspace())
-        return out
-    finally:
-        os.chdir(cwd)
+    ws = workspace()
+    out = lr(ws)
+    out["workspace"] = str(ws)
+    return out
 
 
 @mcp.tool
@@ -265,8 +261,8 @@ def refdata_list() -> dict[str, Any]:
 def refdata_fetch(name: str, confirmed_by_user: bool = False, allow_unpinned: bool = False,
                   wait_seconds: float = 40) -> dict[str, Any]:
     """Download a reference dataset. Datasets over 100 MB require the user's confirmation: ask them,
-    then call with confirmed_by_user=true. Datasets without a pinned checksum (pleioFDR files) also
-    need allow_unpinned=true, again only after the user agrees."""
+    then call with confirmed_by_user=true. A dataset without a pinned checksum (none at present)
+    also needs allow_unpinned=true, again only after the user agrees."""
     args = ["refdata", "fetch", name] + (["--yes"] if confirmed_by_user else []) \
         + (["--allow-unpinned"] if allow_unpinned else [])
     return _submit(args, wait_seconds)
@@ -274,7 +270,7 @@ def refdata_fetch(name: str, confirmed_by_user: bool = False, allow_unpinned: bo
 
 @mcp.tool
 def backend_list() -> dict[str, Any]:
-    """External tools (PLINK 2, GCTA, SMR, MAGMA, pleioFDR, R) and how to enable missing ones."""
+    """External tools (PLINK 2, GCTA, SMR, MAGMA, pleioFDR) and how to enable missing ones."""
     from genor import backends
 
     return {"platform": backends.platform_key(), "backends": backends.status()}
@@ -289,7 +285,7 @@ def backend_install(name: str, wait_seconds: float = 40) -> dict[str, Any]:
 @mcp.tool
 def backend_add(name: str, path: str) -> dict[str, Any]:
     """Register a tool the user installed themselves (e.g. MAGMA, whose licence forbids bundling).
-    path is the executable or its directory."""
+    path is the executable (named as the registry expects, e.g. 'magma') or its directory."""
     from genor import backends
 
     try:
@@ -366,12 +362,17 @@ def lookup_enrichment(genes: list[str], background: list[str] | None = None,
 @mcp.tool
 def report_build(run_dirs: list[str], out: str = "genor_report.md",
                  title: str = "GeNor analysis report") -> dict[str, Any]:
-    """Combine run directories into a Markdown + HTML report with warnings, decisions and citations."""
+    """Combine run directories into a Markdown + HTML report with warnings, decisions and citations.
+    out must be inside the workspace."""
     from genor.commands import report_build as rb
 
     ws = workspace()
     dirs = [Path(d) if Path(d).is_absolute() else ws / d for d in run_dirs]
-    o = Path(out) if Path(out).is_absolute() else ws / out
+    o = (Path(out) if Path(out).is_absolute() else ws / out).resolve()
+    if not o.is_relative_to(ws.resolve()):
+        return {"status": "error", "error": {"code": "bad_param", "message": f"out must be inside the workspace {ws}",
+                                             "hint": "Give a relative path such as 'genor_report.md'."}}
+    title = title.replace("\r", " ").replace("\n", " ")
     try:
         return rb(dirs, o, title)
     except GenorError as e:

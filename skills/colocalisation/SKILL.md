@@ -91,7 +91,8 @@ Citation recorded: Giambartolomei 2014 (`coloc`). Details, formulas, and prior r
 
 `summary` fields:
 
-- `nsnps`: shared variants after harmonisation. Low counts (tens) make results fragile.
+- `nsnps`: shared variants in the region (matched on rsID, else chr:pos; alleles are not
+  aligned because ABF ignores effect direction). Low counts (tens) make results fragile.
 - `PP.H0` ... `PP.H4`: sum to 1.
 - `interpretation`: GeNor's rule of thumb: PP.H4 > 0.8 "shared causal variant"; PP.H3 > 0.8
   "distinct causal variants"; PP.H0 + PP.H1 + PP.H2 > 0.5 "at least one trait lacks a clear signal";
@@ -126,8 +127,6 @@ no signal there. At rs2237324 (MDD_sim lead), PP.H4 = 1.0.
 | `cannot_match_variants` | No shared rsIDs and no chr/pos in both | Reload with position columns, or use consistent IDs. |
 | `bad_param` / `bad_region` / `not_found` | Missing region/lead, malformed region, lead not in trait 1 | Pass `--region chr:start-end`, or put the trait with the lead first. |
 | `coloc_inputs` | No beta/SE and no MAF+N; or case-control without case fraction | Reload with `--n` / `--n-cases` / `--n-controls`. |
-| warning `allele_mismatch` (serious) | > 5% of shared variants have incompatible alleles | Likely build or ID mismatch; stop and check. |
-| warning `palindromic_dropped_no_freq` | A/T and C/G variants dropped (no frequencies) | Load allele frequencies if available. |
 | warning `sdy_assumed` | sdY not estimable | Ask whether the trait is standardised. |
 | info `single_causal_assumption` | Always emitted | Check for multiple signals (step 6). |
 

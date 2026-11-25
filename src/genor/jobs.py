@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -24,10 +25,12 @@ from genor.config import jobs_dir
 from genor.errors import GenorError
 from genor.runs import now
 
+_JOB_ID = re.compile(r"^\d{8}-\d{6}-[0-9a-f]{6}$")
+
 
 def _dir(job_id: str) -> Path:
     d = jobs_dir() / job_id
-    if not d.exists():
+    if not _JOB_ID.fullmatch(job_id) or not d.exists():
         raise GenorError(f"No job {job_id}", code="job_not_found", hint="genor job list")
     return d
 
@@ -43,7 +46,7 @@ def submit(args: list[str], cwd: Path | None = None, label: str | None = None) -
            "cwd": str((cwd or Path.cwd()).resolve()), "submitted": now(), "status": "running"}
     with open(d / "stdout.log", "w") as out, open(d / "stderr.log", "w") as err:
         p = subprocess.Popen(cmd, cwd=rec["cwd"], stdout=out, stderr=err, stdin=subprocess.DEVNULL,
-                             start_new_session=True, env={**os.environ, "GENOR_JOB_ID": job_id})
+                             start_new_session=True)
     rec["pid"] = p.pid
     (d / "job.json").write_text(json.dumps(rec, indent=2))
     # completion is detected lazily in status(): process gone + result JSON on stdout
@@ -86,7 +89,8 @@ def _result_from_stdout(d: Path) -> dict[str, Any] | None:
 def status(job_id: str) -> dict[str, Any]:
     d = _dir(job_id)
     rec = json.loads((d / "job.json").read_text())
-    if rec["status"] == "running" and not _alive(rec["pid"]):
+    # a result on stdout means the job finished even if its PID now belongs to another process
+    if rec["status"] == "running" and (not _alive(rec["pid"]) or _result_from_stdout(d) is not None):
         res = _result_from_stdout(d)
         if res is None:
             rec["status"] = "failed"
@@ -97,7 +101,6 @@ def status(job_id: str) -> dict[str, Any]:
         (d / "job.json").write_text(json.dumps(rec, indent=2))
     out = {k: rec.get(k) for k in ("id", "label", "status", "submitted", "finished", "run_dir")}
     if out["status"] == "running":
-        out["elapsed_s"] = None
         tail = (d / "stderr.log").read_text().strip().splitlines()[-3:]
         if tail:
             out["last_log_lines"] = tail
@@ -124,8 +127,9 @@ def logs(job_id: str, n: int = 50) -> dict[str, Any]:
 
 def cancel(job_id: str) -> dict[str, Any]:
     d = _dir(job_id)
+    status(job_id)  # marks a finished job done/failed, so a reused PID is never signalled
     rec = json.loads((d / "job.json").read_text())
-    if rec["status"] == "running" and _alive(rec["pid"]):
+    if rec["status"] == "running":
         os.killpg(os.getpgid(rec["pid"]), signal.SIGTERM)
         rec["status"] = "cancelled"
         rec["finished"] = now()

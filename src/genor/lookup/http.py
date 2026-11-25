@@ -48,7 +48,10 @@ def request(method: str, url: str, *, retries: int = 3, **kw: Any) -> Any:
             with client() as c:
                 r = c.request(method, url, **kw)
             if r.status_code == 429 or r.status_code >= 500:
-                retry_after = float(r.headers.get("Retry-After", 2 ** attempt))
+                try:
+                    retry_after = float(r.headers.get("Retry-After", 2 ** attempt))
+                except ValueError:  # HTTP-date form
+                    retry_after = 2 ** attempt
                 if TRANSPORT is None:
                     time.sleep(min(retry_after, 30))
                 err = GenorError(f"{host} returned {r.status_code}", code="remote_unavailable")
@@ -56,7 +59,12 @@ def request(method: str, url: str, *, retries: int = 3, **kw: Any) -> Any:
             if r.status_code >= 400:
                 raise GenorError(f"{host} returned {r.status_code}: {r.text[:300]}",
                                  code="remote_bad_request")
-            return r.json()
+            try:
+                return r.json()
+            except ValueError as e:
+                raise GenorError(f"{host} returned a non-JSON response ({r.status_code}): {r.text[:200]}",
+                                 code="remote_unavailable",
+                                 hint="The service may be down or have changed its API. Retry later.") from e
         except httpx.HTTPError as e:
             err = e
     raise GenorError(f"Request to {host} failed: {err}", code="remote_unavailable",

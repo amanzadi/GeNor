@@ -11,8 +11,7 @@ convenience and its weakness.
 
 Not in GeNor yet: SuSiE / SuSiE-RSS (multiple causal variants with an LD matrix), GCTA-COJO
 conditional and joint analysis, FINEMAP, PolyFun, functional priors. They are planned for a later
-milestone. (`genor backend install gcta` downloads GCTA, but no GeNor command drives COJO yet;
-the `r` backend lists `r.susier` but nothing is wired to it.) If the user needs multi-signal
+milestone. (`genor backend install gcta` downloads GCTA, but no GeNor command drives COJO yet.) If the user needs multi-signal
 fine-mapping now, say so and point them to running SuSiE-RSS or COJO outside GeNor.
 
 ## When to use

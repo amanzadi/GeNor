@@ -15,7 +15,6 @@ Other commands take that directory as input.
 from __future__ import annotations
 
 import csv
-import gzip
 import io
 import json
 import zipfile
@@ -28,7 +27,7 @@ import pandas as pd
 from scipy import stats
 
 from genor.errors import GenorError, NeedsUserDecision, Warnings
-from genor.guards import norm_ancestry, norm_build, refuse_individual_level
+from genor.guards import norm_ancestry, norm_build, open_text, refuse_individual_level
 from genor.sumstats.columns import detect, normalise
 
 STANDARD = ["variant_id", "chromosome", "base_pair_location", "effect_allele", "other_allele",
@@ -63,8 +62,6 @@ class TraitMeta:
 
 def _open_text(path: Path) -> io.TextIOBase:
     name = path.name.lower()
-    if name.endswith((".gz", ".bgz")):
-        return io.TextIOWrapper(gzip.open(path, "rb"), encoding="utf-8", errors="replace")
     if name.endswith(".zip"):
         zf = zipfile.ZipFile(path)
         members = [m for m in zf.namelist() if not m.endswith("/") and "__MACOSX" not in m]
@@ -72,7 +69,7 @@ def _open_text(path: Path) -> io.TextIOBase:
             raise GenorError(f"{path.name} contains {len(members)} files; expected one.",
                              code="zip_multiple_members", hint="Unzip it and pass the file you mean.")
         return io.TextIOWrapper(zf.open(members[0]), encoding="utf-8", errors="replace")
-    return open(path, encoding="utf-8", errors="replace")
+    return open_text(path)
 
 
 def _sniff(path: Path) -> tuple[str | None, int]:
@@ -119,12 +116,16 @@ def read_table(path: Path) -> pd.DataFrame:
 def read_gwas_vcf(path: Path) -> pd.DataFrame:
     """Read a single-trait GWAS-VCF (MRC IEU OpenGWAS format)."""
     rows = []
-    opener = gzip.open if path.name.lower().endswith(("gz", "bgz")) else open
-    with opener(path, "rt") as f:
+    with _open_text(path) as f:
         for line in f:
             if line.startswith("#"):
                 continue
             p = line.rstrip("\n").split("\t")
+            if len(p) < 10:
+                raise GenorError(f"{path.name} has no FORMAT/sample columns, so it is not a GWAS-VCF.",
+                                 code="vcf_not_gwas_vcf",
+                                 hint="GeNor reads GWAS-VCF (one trait column with ES/SE/LP FORMAT "
+                                      "fields). Convert other VCFs to a tab-separated table first.")
             fmt = p[8].split(":")
             val = dict(zip(fmt, p[9].split(":"), strict=False))
             alts = p[4].split(",")
@@ -255,6 +256,11 @@ def standardise(raw: pd.DataFrame, overrides: dict[str, str] | None, w: Warnings
             if ok.mean() < 0.8:
                 w.add("p_z_inconsistent", f"P and beta/SE disagree for {100 * (1 - ok.mean()):.0f}% of "
                       "variants. The SE may be on another scale, or P may be GC-corrected.", "serious")
+    under = (df["p_value"] == 0) & np.isfinite(df["z"]) & (df["z"] != 0)
+    if under.any():
+        df.loc[under, "p_value"] = 1e-300
+        w.add("p_underflow", f"{int(under.sum())} P-values below the float limit (read as 0) set "
+              "to 1e-300; Z keeps the full signal.", "warning", count=int(under.sum()))
 
     # Sample size -------------------------------------------------------------
     if n_cases is not None:

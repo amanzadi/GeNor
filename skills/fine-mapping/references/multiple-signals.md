@@ -56,7 +56,7 @@ multiple signals in that study.
   installed with `genor backend install gcta`, and the citation key `gcta-cojo` exists, but there
   is no `genor cojo` command. Planned for a later milestone.
 - **SuSiE / SuSiE-RSS** (Wang et al. 2020; Zou et al. 2022): multiple causal variants with an LD
-  matrix. Listed as an optional R backend (`r.susier`) in the registry but not wired. Planned.
+  matrix. Not in GeNor. Planned.
 - **coloc-SuSiE** (Wallace 2021) for colocalisation with multiple signals. Not in GeNor.
 
 If the user needs these, say they are not in GeNor and that the usual route is to run them

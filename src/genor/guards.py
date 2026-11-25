@@ -9,8 +9,11 @@
 
 from __future__ import annotations
 
+import bz2
 import gzip
+import lzma
 from pathlib import Path
+from typing import TextIO
 
 from genor.errors import GenorError, IndividualLevelDataError, NeedsUserDecision
 
@@ -43,9 +46,25 @@ def refuse_individual_level(path: Path) -> None:
         _check_vcf(path)
 
 
+def open_text(path: Path) -> TextIO:
+    """Open a plain, gzip, bzip2 or xz text file; refuse zstd (no stdlib reader)."""
+    name = path.name.lower()
+    if name.endswith(".zst"):
+        raise GenorError(f"{path.name} is zstd-compressed, which GeNor cannot read.",
+                         code="unsupported_compression",
+                         hint=f"Decompress it first (zstd -d {path.name}) or recompress with gzip.")
+    kw = {"encoding": "utf-8", "errors": "replace"}
+    if name.endswith((".gz", ".bgz")):
+        return gzip.open(path, "rt", **kw)
+    if name.endswith(".bz2"):
+        return bz2.open(path, "rt", **kw)
+    if name.endswith(".xz"):
+        return lzma.open(path, "rt", **kw)
+    return open(path, **kw)
+
+
 def _check_vcf(path: Path) -> None:
-    opener = gzip.open if path.name.lower().endswith(("gz", "bgz")) else open
-    with opener(path, "rt") as f:
+    with open_text(path) as f:
         for line in f:
             if line.startswith("##"):
                 continue
@@ -78,7 +97,12 @@ def norm_build(build: str | int | None) -> str | None:
     if build is None:
         return None
     b = str(build).strip().lower().replace("grch", "").replace("hg", "").replace("b", "")
-    return {"37": "GRCh37", "19": "GRCh37", "38": "GRCh38"}.get(b)
+    out = {"37": "GRCh37", "19": "GRCh37", "38": "GRCh38"}.get(b)
+    if out is None:
+        raise GenorError(f"Unrecognised genome build '{build}'.", code="bad_build",
+                         hint="Use GRCh37 (also hg19, b37) or GRCh38 (also hg38, b38). Older builds "
+                              "(hg18/GRCh36) must be lifted to one of these outside GeNor.")
+    return out
 
 
 ANCESTRIES = {"EUR", "EAS", "AFR", "AMR", "SAS", "MID", "CSA", "multi"}

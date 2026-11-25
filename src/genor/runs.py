@@ -20,6 +20,7 @@ from __future__ import annotations
 import datetime as _dt
 import hashlib
 import json
+import math
 import platform
 import sys
 import tomllib
@@ -58,6 +59,7 @@ def default_run_dir(command: str) -> Path:
 
 
 def _jsonable(v: Any) -> Any:
+    """Plain JSON types; non-finite floats (NaN, inf) become None so strict parsers accept it."""
     if isinstance(v, Path):
         return str(v)
     if isinstance(v, dict):
@@ -66,9 +68,11 @@ def _jsonable(v: Any) -> Any:
         return [_jsonable(x) for x in v]
     if hasattr(v, "item") and callable(v.item):  # numpy scalar
         try:
-            return v.item()
+            v = v.item()
         except Exception:  # noqa: BLE001
             return str(v)
+    if isinstance(v, float) and not math.isfinite(v):
+        return None
     return v
 
 
@@ -176,11 +180,12 @@ class Run:
             out["next_steps"] = self.next_steps
         if self.error:
             out["error"] = self.error
-        return out
+        return _jsonable(out)
 
     def write(self) -> None:
-        (self.dir / "manifest.json").write_text(json.dumps(self.manifest(), indent=2, default=str))
-        (self.dir / "result.json").write_text(json.dumps(self.result(), indent=2, default=str))
+        (self.dir / "manifest.json").write_text(json.dumps(_jsonable(self.manifest()), indent=2, default=str,
+                                                           allow_nan=False))
+        (self.dir / "result.json").write_text(json.dumps(self.result(), indent=2, default=str, allow_nan=False))
 
     def __enter__(self) -> Run:
         return self

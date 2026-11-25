@@ -87,10 +87,20 @@ def ot_study_locus_coloc(study_locus_id: str, n: int = 20) -> dict[str, Any]:
 # ----------------------------------------------------------------- Ensembl
 
 
+def _ensembl(build: str) -> tuple[str, str]:
+    from genor.guards import norm_build
+
+    b = norm_build(build)
+    if b is None:
+        raise GenorError(f"Unknown genome build '{build}'", code="bad_param", hint="Use GRCh37 or GRCh38.")
+    return b, ENSEMBL[b]
+
+
 def vep(rsids: list[str], build: str = "GRCh38") -> list[dict[str, Any]]:
     if len(rsids) > 200:
         raise GenorError("VEP lookups are limited to 200 variants per call.", code="too_many")
-    out = request("POST", f"{ENSEMBL[build]}/vep/human/id",
+    _, url = _ensembl(build)
+    out = request("POST", f"{url}/vep/human/id",
                   json={"ids": rsids}, headers={"Content-Type": "application/json",
                                                 "Accept": "application/json"})
     rows = []
@@ -106,8 +116,9 @@ def vep(rsids: list[str], build: str = "GRCh38") -> list[dict[str, Any]]:
 def genes_in_region(chrom: str, start: int, end: int, build: str = "GRCh37") -> list[dict[str, Any]]:
     if end - start > 5_000_000:
         raise GenorError("Region larger than 5 Mb.", code="region_too_large")
+    build, url = _ensembl(build)
     try:
-        out = request("GET", f"{ENSEMBL[build]}/overlap/region/human/{chrom}:{start}-{end}",
+        out = request("GET", f"{url}/overlap/region/human/{chrom}:{start}-{end}",
                       params={"feature": "gene"}, headers={"Accept": "application/json"})
     except GenorError as e:
         if build == "GRCh37" and e.code == "remote_unavailable":

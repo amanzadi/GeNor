@@ -116,6 +116,9 @@ Rough reading (details and formulas in [references/qc-metrics.md](references/qc-
 | `no_signed_statistic` | no beta+SE, beta+P or Z | File lacks an effect column; check the right file/columns. |
 | `needs_user_decision` (exit 3) | beta looks like OR; or build unknown in liftover | Ask, then rerun with `--effect-type` / `--build`. |
 | `zip_multiple_members`, `empty_file`, `file_not_found` | input problems | Unzip / correct path. |
+| `bad_build` | `--build`/`--to` is not GRCh37/GRCh38 (e.g. hg18) | Use GRCh37, GRCh38, hg19, hg38, b37 or b38; never guess. |
+| `vcf_not_gwas_vcf` | VCF without FORMAT/sample columns (sites-only) | Need a GWAS-VCF with ES/SE/LP fields, or a tab-separated table. |
+| `unsupported_compression` | `.zst` file | Decompress (`zstd -d`) or recompress with gzip. |
 | `nothing_to_do` | liftover target equals current build | Skip liftover. |
 | `refdata_missing` | chain file not downloaded | `genor refdata fetch chain-...` (small; still tell the user). |
 | `not_a_trait_dir` (later commands) | raw file passed instead of loaded directory | Pass the `--out` directory. |
@@ -126,7 +129,7 @@ beta/SE disagree; SE on another scale or P GC-corrected), `build_unknown`, `buil
 `n_missing`, `ancestry_unknown`, `qc_removed_many` (serious: >30% removed; usually a mis-mapped
 frequency or INFO column), `inflation_high`, `deflation`, `few_variants`, `no_eaf`, `mhc_present`,
 `nonpositive_or`, `se_from_p`, `z_recomputed`, `p_from_z`, `column_note`,
-`liftover_many_unmapped` (>5% did not map).
+`liftover_many_unmapped` (>5% did not map), `p_underflow` (P below 1e-308 read as 0; set to 1e-300).
 
 A silent failure to watch for: the wrong allele mapped as effect allele. Nothing errors, but every
 sign is flipped. Symptoms later: harmonisation `allele_mismatch`, MR or rg with an implausible sign.

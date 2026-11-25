@@ -126,6 +126,7 @@ How to read a result set:
 
 | Code | Meaning | Fix |
 |---|---|---|
+| `mr_needs_beta_se` | exposure or outcome has no beta/SE (Z/P-only or sample-size meta) | Reload from a file with beta and SE; Z-only traits cannot be MR inputs. |
 | `mr_no_instruments` | no exposure SNP below the threshold | **Ask the user** about relaxing; or the exposure GWAS is underpowered. |
 | `refdata_missing` | 1000G panel not downloaded | Ask; `genor refdata fetch g1000-eur --yes`. |
 | `confirm_download` | fetch without `--yes` for a > 100 MB dataset | Ask; rerun with `--yes` (MCP `confirmed_by_user=true`). |

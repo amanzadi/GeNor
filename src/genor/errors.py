@@ -76,9 +76,6 @@ class Warnings:
     def add(self, code: str, message: str, severity: str = "warning", **details: Any) -> None:
         self.items.append(Warning_(code, message, severity, details))
 
-    def extend(self, other: Warnings) -> None:
-        self.items.extend(other.items)
-
     def to_list(self) -> list[dict[str, Any]]:
         return [w.to_dict() for w in self.items]
 

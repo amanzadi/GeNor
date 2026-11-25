@@ -87,7 +87,7 @@ def munge(df: pd.DataFrame, meta: TraitMeta, ld: LDRef, w: Warnings, label: str)
                          code="cannot_match_ldscores",
                          hint=f"Lift over to {ld.build} (genor sumstats liftover) or provide rsIDs.")
     a1, a2 = d["effect_allele"], d["other_allele"]
-    keep = is_snv(a1, a2) & ~is_palindromic(a1, a2) & d["z"].notna() & d["SNP"].notna()
+    keep = is_snv(a1, a2) & ~is_palindromic(a1, a2) & d["z"].notna() & d["SNP"].notna() & d["n"].notna()
     if "info" in d and d["info"].notna().any():
         keep &= ~(d["info"] < 0.9)
     if "effect_allele_frequency" in d and d["effect_allele_frequency"].notna().any():
@@ -154,27 +154,21 @@ def _two_step(n_annot: int, intercept: float | None) -> int | None:
 
 
 def h2(df: pd.DataFrame, meta: TraitMeta, ld: LDRef, w: Warnings, *, n_blocks: int = 200,
-       intercept: float | None = None, pop_prev: float | None = None,
-       samp_prev: float | None = None, chisq_max: float | None = None) -> dict[str, Any]:
+       intercept: float | None = None, pop_prev: float | None = None) -> dict[str, Any]:
     check_ancestry(meta.ancestry, ld.ancestry, "the LD score reference")
     ss = _merge(munge(df, meta, ld, w, meta.trait), ld)
     if len(ss) < 200_000:
         w.add("ldsc_few_snps", f"{meta.trait}: only {len(ss)} SNPs overlap the LD scores (LDSC "
               "expects ~1M HapMap3 SNPs); standard errors will be larger.", "warning")
-    if chisq_max is not None:
-        ss = ss[ss["Z"] ** 2 < chisq_max]
     n = len(ss)
     s = lambda x: np.asarray(x, dtype=float).reshape((n, 1))  # noqa: E731
     h = reg.Hsq(s(ss["Z"] ** 2), s(ss["L2"]), s(ss["w"]), s(ss["N"]), np.array([[ld.M]]),
                 n_blocks=min(n, n_blocks), intercept=intercept, twostep=_two_step(1, intercept))
-    P = samp_prev if samp_prev is not None else meta.sample_prevalence
+    P = meta.sample_prevalence
     K = pop_prev if pop_prev is not None else meta.population_prevalence
     res = _hsq_dict(h, n, P, K)
     _interpret_h2(res, meta.trait, w)
     return res
-
-
-MATCH = {a + b + c + d for a in "ACGT" for b in "ACGT" for c in "ACGT" for d in "ACGT"}
 
 
 def _align(m: pd.DataFrame) -> pd.DataFrame:

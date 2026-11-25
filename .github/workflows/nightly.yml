@@ -5,6 +5,9 @@ on:
     - cron: "17 3 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   live-and-slow:
     # Remote APIs retire endpoints without notice (GWAS Catalog, eQTL Catalogue did in 2026);

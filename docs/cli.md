@@ -334,7 +334,7 @@ Delete a downloaded dataset.
 
 ## `genor backend`
 
-External tools (PLINK 2, GCTA, MAGMA, pleioFDR, R).
+External tools (PLINK 2, GCTA, SMR, MAGMA, pleioFDR).
 
 ### `genor backend list`
 

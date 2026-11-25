@@ -52,8 +52,7 @@ def mhc_mask(df: pd.DataFrame, build: str | None) -> pd.Series:
 
 
 def run_qc(df: pd.DataFrame, build: str | None, *, maf: float = 0.01, info: float = 0.8,
-           drop_mhc: bool = False, drop_palindromic_ambiguous: bool = False,
-           w: Warnings | None = None) -> tuple[pd.DataFrame, dict[str, Any], Warnings]:
+           drop_mhc: bool = False, w: Warnings | None = None) -> tuple[pd.DataFrame, dict[str, Any], Warnings]:
     w = w if w is not None else Warnings()
     report: dict[str, Any] = {"n_input": int(len(df)), "removed": {}, "flags": {}}
     keep = pd.Series(True, index=df.index)
@@ -106,9 +105,6 @@ def run_qc(df: pd.DataFrame, build: str | None, *, maf: float = 0.01, info: floa
         f = d["effect_allele_frequency"]
         amb = pal & f.between(0.4, 0.6)
         report["flags"]["palindromic_ambiguous_freq"] = int(amb.sum())
-        if drop_palindromic_ambiguous:
-            d = d[~amb]
-            report["removed"]["palindromic_ambiguous"] = int(amb.sum())
     mhc = mhc_mask(d, build)
     report["flags"]["mhc"] = int(mhc.sum())
     if drop_mhc:

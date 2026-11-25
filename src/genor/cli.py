@@ -22,6 +22,7 @@ import typer
 
 from genor import RESEARCH_USE_NOTICE, __version__
 from genor.errors import GenorError, NeedsUserDecision
+from genor.runs import _jsonable
 
 JSON_MODE = False
 
@@ -45,7 +46,7 @@ magma_app = typer.Typer(help="MAGMA gene / gene-set / gene-property analysis (us
 lookup_app = typer.Typer(help="Open Targets, Ensembl, STRING and g:Profiler lookups.", no_args_is_help=True)
 report_app = typer.Typer(help="Build reports from run directories.", no_args_is_help=True)
 refdata_app = typer.Typer(help="Reference data (LD scores, LD panels, chain files).", no_args_is_help=True)
-backend_app = typer.Typer(help="External tools (PLINK 2, GCTA, MAGMA, pleioFDR, R).", no_args_is_help=True)
+backend_app = typer.Typer(help="External tools (PLINK 2, GCTA, SMR, MAGMA, pleioFDR).", no_args_is_help=True)
 job_app = typer.Typer(help="Background jobs for long analyses.", no_args_is_help=True)
 skills_app = typer.Typer(help="Agent skills: list, show, install for Claude/Codex/opencode.", no_args_is_help=True)
 
@@ -62,7 +63,7 @@ for sub, name in [(sumstats_app, "sumstats"), (meta_app, "meta"), (ldsc_app, "ld
 
 def emit(result: Any) -> None:
     if JSON_MODE:
-        sys.stdout.write(json.dumps(result, indent=1, default=str) + "\n")
+        sys.stdout.write(json.dumps(_jsonable(result), indent=1, default=str, allow_nan=False) + "\n")
         return
     from rich.console import Console
     from rich.pretty import Pretty
@@ -94,7 +95,7 @@ def _fail(err: GenorError) -> None:
     out = {"status": "needs_user_decision" if isinstance(err, NeedsUserDecision) else "error",
            "error": err.to_dict()}
     if JSON_MODE:
-        sys.stdout.write(json.dumps(out, indent=1, default=str) + "\n")
+        sys.stdout.write(json.dumps(_jsonable(out), indent=1, default=str, allow_nan=False) + "\n")
     else:
         sys.stderr.write(f"error [{err.code}]: {err.message}\n")
         if err.hint:
@@ -152,7 +153,7 @@ def runs() -> None:
     """List run directories under the current directory."""
     from genor.commands import list_runs
 
-    emit(list_runs())
+    emit(list_runs(Path(".")))
 
 
 @app.command()

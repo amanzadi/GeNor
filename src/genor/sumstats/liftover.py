@@ -27,6 +27,11 @@ class _Blocks:
     q_size: np.ndarray
 
 
+# GeNor codes sex/mito chromosomes numerically (load.CHROM_MAP); chain files use names
+TO_CHAIN = {"23": "X", "24": "Y", "26": "M"}
+FROM_CHAIN = {"X": "23", "Y": "24", "M": "26", "MT": "26"}
+
+
 def _clean(chrom: str) -> str:
     return chrom[3:] if chrom.startswith("chr") else chrom
 
@@ -72,7 +77,10 @@ def lift(chain: dict[str, _Blocks], chrom: pd.Series, pos: pd.Series) -> tuple[p
     new_pos = pd.Series(pd.NA, index=chrom.index, dtype="Int64")
     chrom_s = chrom.astype(str)
     for c in chrom_s.unique():
-        blocks = chain.get(c)
+        cc = TO_CHAIN.get(c, c)
+        blocks = chain.get(cc)
+        if blocks is None and cc == "M":
+            cc, blocks = "MT", chain.get("MT")
         if blocks is None:
             continue
         idx = chrom_s.index[chrom_s == c]
@@ -85,7 +93,7 @@ def lift(chain: dict[str, _Blocks], chrom: pd.Series, pos: pd.Series) -> tuple[p
         fwd = blocks.q_strand[kk] == 1
         q = np.where(fwd, blocks.q_start[kk] + off, blocks.q_size[kk] - (blocks.q_start[kk] + off) - 1)
         ok &= fwd  # reverse-strand mappings would need allele complementing; drop them
-        ok &= blocks.q_chrom[kk] == c
-        new_chrom.loc[idx[ok]] = blocks.q_chrom[kk][ok]
+        ok &= blocks.q_chrom[kk] == cc
+        new_chrom.loc[idx[ok]] = FROM_CHAIN.get(cc, cc)
         new_pos.loc[idx[ok]] = q[ok] + 1
     return new_chrom, new_pos

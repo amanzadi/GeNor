@@ -11,7 +11,6 @@ Resolution order for a backend:
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 import platform
@@ -77,6 +76,9 @@ def add(name: str, path: str | Path) -> dict[str, Any]:
         p = cand
     if not p.exists():
         raise GenorError(f"{p} does not exist", code="backend_not_found")
+    if p.name != e["executable"]:
+        raise GenorError(f"{p} is not '{e['executable']}'", code="backend_not_found",
+                         hint=f"Pass the {name} executable named '{e['executable']}' or the directory containing it.")
     regs = registrations()
     regs[name] = str(p)
     _save_registrations(regs)
@@ -233,11 +235,3 @@ def run(name: str, args: list[str], cwd: Path | None = None, log: Path | None = 
         raise GenorError(f"{name} exited with code {r.returncode}", code="backend_failed",
                          hint="\n".join(tail), log=str(log) if log else None)
     return r
-
-
-def sha256(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            h.update(chunk)
-    return h.hexdigest()

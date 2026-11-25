@@ -98,6 +98,11 @@ def run(d1: pd.DataFrame, m1: TraitMeta, d2: pd.DataFrame, m2: TraitMeta, work: 
     if stattype not in ("condfdr", "conjfdr"):
         raise GenorError("stattype must be condfdr or conjfdr", code="bad_param")
     fdrthresh = fdrthresh if fdrthresh is not None else (0.01 if stattype == "condfdr" else 0.05)
+    safe1, safe2 = ("".join(ch if ch.isalnum() else "_" for ch in m.trait) for m in (m1, m2))
+    if safe1 == safe2:
+        raise GenorError(f"Traits '{m1.trait}' and '{m2.trait}' both map to the file name '{safe1}.mat'.",
+                         code="pleio_same_trait_name",
+                         hint="Reload one trait with a different --trait name (genor sumstats load ... --trait NAME).")
     for m in (m1, m2):
         check_ancestry(m.ancestry, "EUR", "the pleioFDR reference (1000G EUR)")
     tmpl_path = Path(template) if template else refdata.file_in("pleiofdr-template")
@@ -117,9 +122,8 @@ def run(d1: pd.DataFrame, m1: TraitMeta, d2: pd.DataFrame, m2: TraitMeta, work: 
     tmpl = read_template(tmpl_path)
     work.mkdir(parents=True, exist_ok=True)
     names = []
-    for d, m in ((d1, m1), (d2, m2)):
+    for d, m, safe in ((d1, m1, safe1), (d2, m2, safe2)):
         arr = align_to_template(d, tmpl, w, m.trait)
-        safe = "".join(ch if ch.isalnum() else "_" for ch in m.trait)
         write_mat(work / f"{safe}.mat", arr)
         names.append((safe, arr["n_matched"]))
     if exclude_mhc:

@@ -32,16 +32,16 @@ uvx --python 3.13 \
 
   `genor doctor` / `genor backend list` then show `pleiofdr` as available. For MCP, the server must
   be started from that environment.
-- Reference data, both **unpinned** (no checksum in GeNor's registry) and large:
+- Reference data, both large (checksum-pinned in GeNor's registry):
   - `pleiofdr-template`: 9,545,380-SNP template, 262 MB.
   - `pleiofdr-ref-eur`: 1000G EUR LD matrix (r2 > 0.1) and annotations, 2.2 GiB (2.38 GB).
     Loading it needs about **12 GB of RAM**.
 
 ```bash
-genor refdata fetch pleiofdr-template pleiofdr-ref-eur --allow-unpinned --yes
+genor refdata fetch pleiofdr-template pleiofdr-ref-eur --yes
 ```
 
-  MCP: `refdata_fetch(name, confirmed_by_user=true, allow_unpinned=true)`, only after the user agrees.
+  MCP: `refdata_fetch(name, confirmed_by_user=true)`, only after the user agrees.
 
 ## Steps
 
@@ -82,8 +82,7 @@ Background and interpretation detail: [references/method-and-interpretation.md](
 
 ## Decision points
 
-- **Ask the user** before downloading: 262 MB + 2.2 GiB, unpinned (not checksum-verified by
-  GeNor), and about 12 GB RAM at run time. If the machine has less memory, stop.
+- **Ask the user** before downloading: 262 MB + 2.2 GiB, and about 12 GB RAM at run time. If the machine has less memory, stop.
 - **Ask the user** whether the two GWAS share participants or controls. Overlap can create
   apparent shared signal; GeNor does not correct for it. Show the LDSC cross-trait intercept.
 - **Ask the user** which trait is primary for condFDR (trait1 | trait2), or whether both
@@ -111,13 +110,13 @@ inputs, `config.txt`, and `results/` with pleioFDR's tables and plots. With `--p
 
 | Code | Meaning | Fix |
 |---|---|---|
-| `refdata_missing` | template or reference not downloaded | Ask; fetch with `--allow-unpinned --yes`. |
-| `unpinned_refdata` | fetch without `--allow-unpinned` | Ask the user to accept an unverified download. |
+| `refdata_missing` | template or reference not downloaded | Ask; fetch with `--yes`. |
 | `confirm_download` | fetch without `--yes` | Ask; add `--yes`. |
 | `backend_missing` | pleioFDR port not importable | Run through `uvx --python 3.13 --with 'pleiofdr @ ...'` as above. |
 | `pleio_needs_rsid` | trait has no `variant_id` | Load a file with rsIDs. |
 | `needs_user_decision` (exit 3) | ancestry unknown or multi | Ask; reload with `--ancestry`. |
 | `ancestry_mismatch` | ancestry is not EUR | No matching reference; stop. |
+| `pleio_same_trait_name` | both traits give the same file name (e.g. `MDD-2019` vs `MDD_2019`) | Reload one trait with a different `--trait`. |
 | `bad_param` | `--stat` not condfdr/conjfdr | Fix the option. |
 | `internal_error` / killed job | often out of memory loading the 2.2 GiB reference | Check `genor job logs`; needs about 12 GB RAM. |
 

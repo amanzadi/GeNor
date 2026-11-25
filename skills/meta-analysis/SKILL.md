@@ -92,6 +92,8 @@ When to prefer which estimate:
 | `meta_too_few` | fewer than two traits given | Pass at least two loaded trait directories. |
 | `build_mismatch` | studies on different builds | `genor sumstats liftover` the odd ones out. |
 | `n_missing` | sample-size scheme with a study lacking N | Reload that study with `--n`, or use `--scheme ivw`. |
+| `meta_needs_position` | studies mix rsID and chr:pos keys and one lacks chromosome/position | Reload that study with chromosome/position columns, or use rsIDs everywhere. |
+| `meta_no_overlap` | no variant in more than one study | Check builds and ID schemes match; liftover or reload. |
 | `bad_param` | unknown `--scheme` | `ivw` or `samplesize`. |
 | `not_a_trait_dir` | raw file passed | Pass the `sumstats load` output directory. |
 

@@ -25,13 +25,24 @@ from genor.sumstats.load import TraitMeta
 COMP = {"A": "T", "T": "A", "C": "G", "G": "C"}
 
 
-def _key(d: pd.DataFrame) -> pd.Series:
-    if "variant_id" in d and d["variant_id"].astype(str).str.startswith("rs").mean() > 0.5:
-        return d["variant_id"].astype(str)
-    return d["chromosome"].astype(str) + ":" + d["base_pair_location"].astype("Int64").astype(str)
+def _keys(tables: list[pd.DataFrame]) -> list[pd.Series]:
+    """One join key for all studies: rsID only if every study is mostly rsIDs, else chr:pos."""
+    if all("variant_id" in d and d["variant_id"].astype(str).str.startswith("rs").mean() > 0.5
+           for d in tables):
+        return [d["variant_id"].astype(str) for d in tables]
+    for i, d in enumerate(tables):
+        if "chromosome" not in d or "base_pair_location" not in d:
+            raise GenorError(
+                f"Study {i + 1} has no chromosome/position, and not every study is keyed by rsID, "
+                "so variants cannot be matched across studies.", code="meta_needs_position",
+                hint="Reload that study with chromosome and position columns "
+                     "(--col chromosome=... --col base_pair_location=...), or use rsIDs in every study.")
+    return [d["chromosome"].astype(str) + ":" + d["base_pair_location"].astype("Int64").astype(str)
+            for d in tables]
 
 
-def _align_all(tables: list[pd.DataFrame], w: Warnings) -> tuple[pd.DataFrame, list[dict[str, Any]]]:
+def _align_all(tables: list[pd.DataFrame], keys: list[pd.Series],
+               w: Warnings) -> tuple[pd.DataFrame, list[dict[str, Any]]]:
     """Stack all studies, aligned to the alleles of the first study that reports each variant.
 
     Like METAL: matching alleles keep their sign, swapped alleles flip it, strand-complemented
@@ -42,7 +53,7 @@ def _align_all(tables: list[pd.DataFrame], w: Warnings) -> tuple[pd.DataFrame, l
     parts = []
     for i, t in enumerate(tables):
         d = t.reindex(columns=["effect_allele", "other_allele", *cols]).copy()
-        d["_k"] = _key(t).to_numpy()
+        d["_k"] = keys[i].to_numpy()
         d["_study"] = i
         parts.append(d.drop_duplicates("_k"))
     lt = pd.concat(parts, ignore_index=True)
@@ -89,9 +100,14 @@ def meta_analyse(tables: list[pd.DataFrame], metas: list[TraitMeta], scheme: str
         w.add("cross_ancestry_meta", f"Studies span ancestries {sorted(map(str, ancs))}. Fixed-effect "
               "IVW assumes one true effect; inspect I^2 and random-effects results. Trans-ancestry "
               "methods (MR-MEGA) model ancestry-related heterogeneity better.", "warning")
-    lt, reports = _align_all(tables, w)
+    keys = _keys(tables)
+    lt, reports = _align_all(tables, keys, w)
     g = lt.groupby("_k", sort=False)
     k = g["_study"].nunique()
+    if not (k > 1).any():
+        raise GenorError("No variant appears in more than one study.", code="meta_no_overlap",
+                         hint="Check that the studies are on the same build and share variant IDs "
+                              "or positions (genor sumstats liftover; reload with --col).")
     out = pd.DataFrame({"variant_id": k.index, "n_studies": k.to_numpy()})
     first = lt.drop_duplicates("_k").set_index("_k")
     out["effect_allele"] = first.loc[out["variant_id"], "effect_allele"].to_numpy()
@@ -140,7 +156,7 @@ def meta_analyse(tables: list[pd.DataFrame], metas: list[TraitMeta], scheme: str
     fsum = lt.groupby("_k", sort=False)[["fw", "n"]].sum(min_count=1)
     out["effect_allele_frequency"] = (fsum["fw"] / fsum["n"]).to_numpy()
     # carry positions from whichever study had them
-    with_pos = [t.assign(_k=_key(t).to_numpy()) for t in tables if "chromosome" in t]
+    with_pos = [t.assign(_k=k.to_numpy()) for t, k in zip(tables, keys, strict=True) if "chromosome" in t]
     if with_pos:
         pos = pd.concat(with_pos)
         pos = pos.drop_duplicates("_k").set_index("_k")

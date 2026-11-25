@@ -14,3 +14,11 @@ First usable release (plan milestones 1–3 plus agent surfaces).
 - Run manifests, background jobs, refdata and backend registries with pinned checksums.
 - CLI with JSON output, MCP server, 12 skills, Claude Code plugin and marketplace.
 - Golden tests against TwoSampleMR, coloc, R meta and original LDSC.
+- Pre-release audit fixes: unknown `--build` values are rejected (`bad_build`); P-values that
+  underflow to 0 are kept (`p_underflow`); meta-analysis uses one variant key for all studies
+  (`meta_no_overlap`, `meta_needs_position`) and keeps the binary trait type; liftover handles
+  X/Y/MT; coloc no longer drops palindromic SNPs; pleioFDR refuses two traits with the same name
+  (`pleio_same_trait_name`); MR needs beta and SE (`mr_needs_beta_se`); JSON output never
+  contains NaN; bz2/xz input is read, zstd refused (`unsupported_compression`).
+- Hardening: MCP `report_build` writes only inside the workspace, job IDs are validated,
+  `backend add` needs the expected executable name, all reference data is SHA-256 pinned.
