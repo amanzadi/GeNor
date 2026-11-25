@@ -34,8 +34,8 @@ dependencies = [
 genor = "genor.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/amanzadi/Genor"
-Issues = "https://github.com/amanzadi/Genor/issues"
+Homepage = "https://github.com/amanzadi/GeNor"
+Issues = "https://github.com/amanzadi/GeNor/issues"
 
 [build-system]
 requires = ["hatchling"]

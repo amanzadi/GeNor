@@ -15,7 +15,7 @@ from genor import __version__
 from genor.errors import GenorError
 
 TRANSPORT: httpx.BaseTransport | None = None
-USER_AGENT = f"genor/{__version__} (+https://github.com/amanzadi/Genor)"
+USER_AGENT = f"genor/{__version__} (+https://github.com/amanzadi/GeNor)"
 _last: dict[str, float] = {}
 
 # minimum seconds between requests per host

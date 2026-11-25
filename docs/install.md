@@ -11,8 +11,8 @@ macOS (x86-64 and Apple silicon). On Windows, install uv inside WSL and follow t
 instructions.
 
 Until GeNor is on PyPI, replace `genor` in `uvx genor ...` with
-`--from git+https://github.com/amanzadi/Genor genor`, e.g.
-`uvx --from git+https://github.com/amanzadi/Genor genor doctor`.
+`--from git+https://github.com/amanzadi/GeNor genor`, e.g.
+`uvx --from git+https://github.com/amanzadi/GeNor genor doctor`.
 
 Claude Code and Claude Desktop are the fully tested surfaces. Codex and opencode use the same MCP
 server and skills; they are smoke-tested only.
@@ -20,11 +20,11 @@ server and skills; they are smoke-tested only.
 ## Claude Code (plugin)
 
 ```text
-/plugin marketplace add amanzadi/Genor
+/plugin marketplace add amanzadi/GeNor
 /plugin install genor@genor
 ```
 
-or from a shell: `claude plugin marketplace add amanzadi/Genor && claude plugin install genor@genor`.
+or from a shell: `claude plugin marketplace add amanzadi/GeNor && claude plugin install genor@genor`.
 
 The plugin provides:
 
@@ -38,7 +38,7 @@ The first call builds GeNor's environment (about a minute); later calls start in
 Without the plugin, use the CLI and copy the skills into the project:
 
 ```bash
-uv tool install git+https://github.com/amanzadi/Genor     # puts `genor` on PATH
+uv tool install git+https://github.com/amanzadi/GeNor     # puts `genor` on PATH
 genor skills install --agent claude                       # -> .claude/skills (or --scope user)
 claude mcp add genor -- genor mcp                         # optional: MCP tools too
 ```
@@ -53,7 +53,7 @@ Claude Desktop reaches GeNor through MCP only. Edit `claude_desktop_config.json`
   "mcpServers": {
     "genor": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/amanzadi/Genor", "genor", "mcp"],
+      "args": ["--from", "git+https://github.com/amanzadi/GeNor", "genor", "mcp"],
       "env": { "GENOR_WORKDIR": "/Users/you/genor-workspace" }
     }
   }
@@ -76,7 +76,7 @@ An experimental Desktop extension manifest is in `packaging/mcpb/` (see its READ
 ```toml
 [mcp_servers.genor]
 command = "uvx"
-args = ["--from", "git+https://github.com/amanzadi/Genor", "genor", "mcp"]
+args = ["--from", "git+https://github.com/amanzadi/GeNor", "genor", "mcp"]
 startup_timeout_sec = 120   # first start builds the environment
 tool_timeout_sec = 60       # GeNor tools return within ~50 s and hand back job ids
 
@@ -87,8 +87,8 @@ GENOR_WORKDIR = "/home/you/genor-workspace"
 Skills (Codex reads `.agents/skills` in the repo and `~/.agents/skills`):
 
 ```bash
-uvx --from git+https://github.com/amanzadi/Genor genor skills install --agent codex            # project
-uvx --from git+https://github.com/amanzadi/Genor genor skills install --agent codex --scope user
+uvx --from git+https://github.com/amanzadi/GeNor genor skills install --agent codex            # project
+uvx --from git+https://github.com/amanzadi/GeNor genor skills install --agent codex --scope user
 ```
 
 If the Codex desktop app does not load skills, the MCP `get_guidance` tool serves the same text.
@@ -104,7 +104,7 @@ If the Codex desktop app does not load skills, the MCP `get_guidance` tool serve
     "servers": {
       "genor": {
         "type": "local",
-        "command": ["uvx", "--from", "git+https://github.com/amanzadi/Genor", "genor", "mcp"]
+        "command": ["uvx", "--from", "git+https://github.com/amanzadi/GeNor", "genor", "mcp"]
       }
     }
   }
@@ -136,7 +136,7 @@ genor --help
 pleioFDR (Python port, pinned commit):
 
 ```bash
-uv tool install --python 3.13 git+https://github.com/amanzadi/Genor \
+uv tool install --python 3.13 git+https://github.com/amanzadi/GeNor \
   --with "pleiofdr @ git+https://github.com/espenhgn/pleiofdr@45e03b9c98c48ce9ef1496c4173a5581b23a853d"
 ```
 

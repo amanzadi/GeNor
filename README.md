@@ -29,7 +29,7 @@ gene-level follow-up, with a reproducible record of every step. It installs with
 ### Claude Code (recommended)
 
 ```text
-/plugin marketplace add amanzadi/Genor
+/plugin marketplace add amanzadi/GeNor
 /plugin install genor@genor
 ```
 
@@ -51,7 +51,7 @@ All use the same MCP server (`genor mcp`). Copy-paste configs: [docs/install.md]
 ### Command line
 
 ```bash
-uvx --from git+https://github.com/amanzadi/Genor genor doctor      # until the PyPI release
+uvx --from git+https://github.com/amanzadi/GeNor genor doctor      # until the PyPI release
 # after release: uvx genor doctor   or   uv tool install genor
 ```
 

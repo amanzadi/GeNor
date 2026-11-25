@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Post-GWAS analysis from summary statistics for Claude: QC, meta-analysis, LDSC h2/rg, clumping, Mendelian randomisation with STROBE-MR, condFDR/conjFDR, fine-mapping, coloc, MAGMA and Open Targets lookups. Research use only.",
   "author": { "name": "Amir H. Amanzadi" },
-  "homepage": "https://github.com/amanzadi/Genor",
-  "repository": "https://github.com/amanzadi/Genor",
+  "homepage": "https://github.com/amanzadi/GeNor",
+  "repository": "https://github.com/amanzadi/GeNor",
   "license": "GPL-3.0-or-later",
   "keywords": ["gwas", "genetics", "post-gwas", "ldsc", "mendelian-randomization", "coloc", "bioinformatics"]
 }

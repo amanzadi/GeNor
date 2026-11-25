@@ -27,7 +27,7 @@ g:Profiler lookups, and reports. Every command writes a run directory with `mani
 - Claude Code plugin: `genor` is on PATH (the plugin's `bin/genor` runs it with `uvx`); the MCP
   tools are also available.
 - Elsewhere: `genor` if installed (`uv tool install genor`), else `uvx genor ...`. Before the PyPI
-  release use `uvx --from git+https://github.com/amanzadi/Genor genor ...`.
+  release use `uvx --from git+https://github.com/amanzadi/GeNor genor ...`.
 - MCP-only clients (Claude Desktop, Codex desktop): use the MCP tools named below.
 
 ## Always start with

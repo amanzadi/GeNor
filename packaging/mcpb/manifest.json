@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "description": "Post-GWAS analysis from GWAS summary statistics (research use only).",
   "author": { "name": "Amir H. Amanzadi" },
-  "homepage": "https://github.com/amanzadi/Genor",
+  "homepage": "https://github.com/amanzadi/GeNor",
   "license": "GPL-3.0-or-later",
   "user_config": {
     "workdir": {
@@ -19,7 +19,7 @@
     "type": "uv",
     "mcp_config": {
       "command": "uvx",
-      "args": ["--from", "git+https://github.com/amanzadi/Genor", "genor", "mcp"],
+      "args": ["--from", "git+https://github.com/amanzadi/GeNor", "genor", "mcp"],
       "env": { "GENOR_WORKDIR": "${user_config.workdir}" }
     }
   }
